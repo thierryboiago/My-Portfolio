@@ -1,8 +1,11 @@
 package br.com.dio.myportfolio.data.di
 
 import android.util.Log
+import br.com.dio.myportfolio.data.repositories.RepoRepository
+import br.com.dio.myportfolio.data.repositories.RepoRepositoryImpl
 import br.com.dio.myportfolio.data.services.GitHubService
 import com.google.gson.GsonBuilder
+import get
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.context.loadKoinModules
@@ -15,7 +18,7 @@ object DataModule {
     private const val OK_HTTP="OkHttp"
 
     fun load(){
-        loadKoinModules(networkModules())
+        loadKoinModules(networkModules()+ repositoriesModule())
     }
 
     private fun networkModules(): Module {
@@ -41,6 +44,14 @@ object DataModule {
         }
 
 
+    }
+
+    private fun repositoriesModule():Module{
+        return module {
+            single<RepoRepository> {
+                RepoRepositoryImpl(get())
+            }
+        }
     }
 
     private inline fun <reified T> createService(okHttpClient: OkHttpClient,factory: GsonConverterFactory): T {
